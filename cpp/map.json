@@ -1,0 +1,32 @@
+{
+    "roads": [
+        {
+            "start": "beijing",
+            "end": "shanghai",
+            "distance": 400,
+            "money": 100,
+            "type": "plane"
+        },
+        {
+            "start": "zhejiang",
+            "end": "shanghai",
+            "distance": 100,
+            "money": 100,
+            "type": "train"
+        },
+        {
+            "start": "beijing",
+            "end": "taizhou",
+            "distance": 100,
+            "money": 100,
+            "type": "train"
+        },
+        {
+            "start": "taizhou",
+            "end": "shanghai",
+            "distance": 100,
+            "money": 100,
+            "type": "train"
+        }
+    ]
+}
