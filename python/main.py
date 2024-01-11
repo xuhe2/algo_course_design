@@ -5,6 +5,7 @@ import json
 import requests as req
 
 from ExtractInfo import extract_info
+from GetTravelPlan import get_travel_plan
 
 app = FastAPI()
 
@@ -12,12 +13,15 @@ app = FastAPI()
 # 处理一个GET请求
 @app.get("/")
 async def run(request: Request):
-    headers = dict(request.headers)
-    print('question: ' + headers['question'])  # 打印请求头中的question字段
+    params = dict(request.query_params)
+    print('question: ' + params['question'])  # 打印请求头中的question字段
 
-    info = extract_info(headers['question'])  # 调用提取信息函数
+    info: str = extract_info(params['question'])  # 调用提取信息函数
 
-    info_json = json.loads(info)  # 将提取的信息转换为JSON格式
+    print('extracted travel info:')
+    print(info)
+    travel_plan: str = get_travel_plan(info)
+    print(travel_plan)
 
     return info
 

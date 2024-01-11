@@ -28,7 +28,7 @@ def chat(messages: list):
         completion = {'role': '', 'content': ''}
         for event in response:
             if event['choices'][0]['finish_reason'] == 'stop':
-                print(f'收到的完成数据: {completion}')
+                # print(f'收到的完成数据: {completion}')
                 break
             for delta_k, delta_v in event['choices'][0]['delta'].items():
                 # print(f'{delta_v}')  # 流式输出
