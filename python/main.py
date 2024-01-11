@@ -2,6 +2,8 @@ from fastapi import FastAPI, Request
 import uvicorn
 import json
 
+import requests as req
+
 from ExtractInfo import extract_info
 
 app = FastAPI()

@@ -10,14 +10,16 @@ bool vis[1010];
 int head[1010], EdgeCount;
 typedef pair<int, int> P; // first是最短距离，second是顶点的编号
 
-int from[1010];           // 记录最短路径的边
-int final_distance[1010]; // 记录最短路径的距离
-int final_money[1010];    // 记录最短路径的花费
+int from[1010];                       // 记录最短路径的边
+std::map<int, std::string> from_type; // 记录来到这个点的方式
+int final_distance[1010];             // 记录最短路径的距离
+int final_money[1010];                // 记录最短路径的花费
 
 struct EDGE
 {
     int u, v, w, nxt;
     int distance, money;
+    std::string from_type;
 } edge[1010 * 10];
 //
 void init()
@@ -26,9 +28,9 @@ void init()
     EdgeCount = 0;
 }
 //
-void add_edge(int u, int v, int w, int distance, int money)
+void add_edge(int u, int v, int w, int distance, int money, std::string from_type)
 {
-    edge[EdgeCount] = EDGE{u, v, w, head[u], distance, money}; // nxt
+    edge[EdgeCount] = EDGE{u, v, w, head[u], distance, money, from_type}; // nxt
     head[u] = EdgeCount++;
 }
 //
@@ -39,9 +41,12 @@ void dijkstra(int pos_begin)
     memset(vis, 0, sizeof(vis));
 
     dis[pos_begin] = 0;
+
     from[pos_begin] = pos_begin;
     final_distance[pos_begin] = 0;
     final_money[pos_begin] = 0;
+    from_type[pos_begin] = "start";
+
     heap.push(P(0, pos_begin));
 
     while (!heap.empty())
@@ -62,6 +67,7 @@ void dijkstra(int pos_begin)
                 // 记录距离和费用
                 final_distance[to] = final_distance[now] + edge[i].distance;
                 final_money[to] = final_money[now] + edge[i].money;
+                from_type[to] = edge[i].from_type;
 
                 heap.push(P{dis[to], to});
                 from[to] = now;
@@ -114,6 +120,7 @@ json dijkstra_run(const std::string &start_pos, const std::string &end_pos, doub
         int distance = p["distance"];
         int money = p["money"];
         int weight = getWeight(distance, money, percent);
+        std::string travel_type = p["type"];
         // 对不同的出行方式做修正
         if (p["type"] == "train")
             weight += train_cost;
@@ -125,7 +132,7 @@ json dijkstra_run(const std::string &start_pos, const std::string &end_pos, doub
         if (min_transition == 1)
             weight = 1;
         // 加入边
-        add_edge(id1, id2, weight, distance, money);
+        add_edge(id1, id2, weight, distance, money, travel_type);
     }
     // 使用dijkstra找最短路
     dijkstra(name2id[start_pos]);
@@ -150,7 +157,11 @@ json dijkstra_run(const std::string &start_pos, const std::string &end_pos, doub
         path_stk.pop();
         // 非空的话,加上`->`作为连接
         if (!path_stk.empty())
-            path_str += "->";
+        {
+            path_str += "-[";
+            path_str += from_type[path_stk.top()];
+            path_str += "]->";
+        }
     }
     // 把路径存入JSON
     result["path"] = path_str;
