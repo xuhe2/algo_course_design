@@ -23,7 +23,7 @@ async def run(request: Request):
     travel_plan: str = get_travel_plan(info)
     print(travel_plan)
 
-    return info
+    return travel_plan
 
 
 if __name__ == "__main__":
