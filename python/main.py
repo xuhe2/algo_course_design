@@ -20,6 +20,11 @@ async def run(request: Request):
 
     print('extracted travel info:')
     print(info)
+
+    # 如果确实关键信息
+    if 'unknown' in info:
+        return 'error'
+
     travel_plan: str = get_travel_plan(info)
     print(travel_plan)
 

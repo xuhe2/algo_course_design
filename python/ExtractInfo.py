@@ -24,6 +24,7 @@ def chat(messages: list):
             model='gpt-3.5-turbo',
             messages=messages,
             stream=True,
+            temperature=0,
         )
         completion = {'role': '', 'content': ''}
         for event in response:
