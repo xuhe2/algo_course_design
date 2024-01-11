@@ -28,7 +28,24 @@ async def run(request: Request):
     travel_plan: str = get_travel_plan(info)
     print(travel_plan)
 
-    return travel_plan
+    # 提取travel_plan中的内容变成回答
+    travel_plan_dict: dict = json.loads(travel_plan)
+
+    answer: str = ''
+    # 添加时间
+    answer += 'time: '
+    answer += str(travel_plan_dict['distance'])
+    answer += '\n'
+    answer += 'money: '
+    # 添加需要的金钱显示
+    answer += str(travel_plan_dict['money'])
+    answer += '\n'
+    # 添加路径显示
+    answer += 'path: '
+    answer += travel_plan_dict['path']
+    answer += '\n'
+
+    return answer
 
 
 if __name__ == "__main__":
