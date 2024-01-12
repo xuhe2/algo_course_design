@@ -1,17 +1,31 @@
 from fastapi import FastAPI, Request
 import uvicorn
 import json
-
-import requests as req
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
+from fastapi.middleware.cors import CORSMiddleware
 
 from ExtractInfo import extract_info
 from GetTravelPlan import get_travel_plan
 
 app = FastAPI()
 
+# 将'/front-end'路径映射到Vue项目的dist文件夹
+app.mount("/front-end", StaticFiles(directory="../front-end"), name="front-end  ")
+
+# 允许所有域的跨域请求
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # 处理一个GET请求
-@app.get("/")
+@app.get("/function")
 async def run(request: Request):
     params = dict(request.query_params)
     print('question: ' + params['question'])  # 打印请求头中的question字段
@@ -46,6 +60,12 @@ async def run(request: Request):
     answer += '\n'
 
     return answer
+
+
+@app.get("/")
+async def root():
+    # 返回main.html
+    return FileResponse(Path("../front-end/main.html"))
 
 
 if __name__ == "__main__":

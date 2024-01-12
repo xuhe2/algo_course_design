@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>design your plan</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #chat-container {
+            width: 100%;
+            height: 100%;
+            /* max-width: 600px; */
+            /* 设置最大宽度，防止对话框过宽 */
+            margin: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-messages {
+            flex: 1;
+            overflow-y: scroll;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        #user-input {
+            display: flex;
+            padding: 20px;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        #send-button {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>chat</h1>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <div id="user-input">
+            <input type="text" id="message-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+            <button id="send-button" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var messageInput = document.getElementById("message-input");
+            var message = messageInput.value;
+
+            if (message.trim() === "") {
+                return; // 避免发送空消息
+            }
+
+            messageInput.value = "";
+
+            var chatMessages = document.getElementById("chat-messages");
+            chatMessages.innerHTML += "<div style='margin-bottom: 10px;'><strong>You:</strong> " + message + "</div>";
+
+            // 模拟后端响应
+            setTimeout(function () {
+                // Sending GET request to http://0.0.0.0:5001/function with params
+                var baseUrl = "http://0.0.0.0:5001/function";
+                var url = baseUrl + "?question=" + encodeURIComponent(message);
+
+                // Set up params
+                var params = {
+                    method: 'GET',
+                    headers: {
+                        // Add any headers if needed
+                    },
+                };
+                // Send the request
+                // Send the request
+                fetch(url, params)
+                    .then(response => response.text())
+                    .then(data => {
+                        // Process the response data
+                        chatMessages.innerHTML += "<div style='margin-bottom: 10px;'><strong>YOUR PLAN:</strong> " + data + "</div>";
+                        chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+                    })
+                    .catch(error => console.error('Error:', error));
+            }, 500);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+
+</html>
